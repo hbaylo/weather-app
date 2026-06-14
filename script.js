@@ -19,6 +19,18 @@ async function searchWeather() {
     <p>Vento: ${weather.windspeedKmph} km/h</p>
   `;
 
+  const days = data.weather.slice(0, 3);
+  document.getElementById('forecast').innerHTML = days.map(d => {
+    const desc = d.hourly[4]?.weatherDesc[0]?.value || d.hourly[0]?.weatherDesc[0]?.value || '';
+    return `
+      <div class="forecast-card">
+        <div class="forecast-day">${new Date(d.date + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric' })}</div>
+        <div class="forecast-desc">${desc}</div>
+        <div class="forecast-temp">${d.mintempC}° / ${d.maxtempC}°</div>
+      </div>
+    `;
+  }).join('');
+
   await supabaseClient.from('search_history').insert({
     city,
     temperature: weather.temp_C,
@@ -33,6 +45,8 @@ async function searchWeather() {
 let historyData = [];
 
 function showHistoryWeather(id) {
+  document.getElementById('forecast').innerHTML = '';
+
   const h = historyData.find(item => item.id === id);
   if (!h) return;
   document.getElementById('weatherResult').innerHTML = `
