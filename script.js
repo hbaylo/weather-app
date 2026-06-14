@@ -1,4 +1,7 @@
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(
+  "https://crpdixjvsaicijzuqrly.supabase.co",
+  "sb_publishable_q-iv7aaRX81kGp08egW0EQ_Cj4IsEQh"
+);
 
 async function searchWeather() {
   const city = document.getElementById('cityInput').value.trim();
