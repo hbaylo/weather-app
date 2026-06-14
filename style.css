@@ -12,7 +12,7 @@ body {
   background: #334155;
   padding: 30px;
   border-radius: 10px;
-  width: 300px;
+  width: 340px;
 }
 
 input {
@@ -29,6 +29,38 @@ button {
 
 #weatherResult {
   margin-top: 20px;
+}
+
+#forecast {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.forecast-card {
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.forecast-day {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.forecast-desc {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.forecast-temp {
+  font-size: 14px;
+  font-weight: bold;
+  color: #facc15;
 }
 
 #history {
