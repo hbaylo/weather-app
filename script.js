@@ -1,4 +1,4 @@
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function searchWeather() {
   const city = document.getElementById('cityInput').value.trim();
@@ -19,7 +19,7 @@ async function searchWeather() {
     <p>Vento: ${weather.windspeedKmph} km/h</p>
   `;
 
-  await supabase.from('search_history').insert({
+  await supabaseClient.from('search_history').insert({
     city,
     temperature: weather.temp_C,
     weather_desc: weatherDesc,
@@ -30,16 +30,33 @@ async function searchWeather() {
   loadHistory();
 }
 
+let historyData = [];
+
+function showHistoryWeather(id) {
+  const h = historyData.find(item => item.id === id);
+  if (!h) return;
+  document.getElementById('weatherResult').innerHTML = `
+    <h2>${h.city}</h2>
+    <p>Temperatura: ${h.temperature}°C</p>
+    <p>Clima: ${h.weather_desc}</p>
+    <p>Umidade: ${h.humidity}%</p>
+    <p>Vento: ${h.wind_speed} km/h</p>
+    <small style="color:#94a3b8">${new Date(h.searched_at).toLocaleString('pt-BR')}</small>
+  `;
+}
+
 async function loadHistory() {
-  const { data } = await supabase
+  const { data } = await supabaseClient
     .from('search_history')
-    .select('city, searched_at')
+    .select('id, city, temperature, weather_desc, humidity, wind_speed, searched_at')
     .order('searched_at', { ascending: false })
     .limit(10);
 
+  historyData = data || [];
+
   const list = document.getElementById('historyList');
-  list.innerHTML = (data || [])
-    .map(h => `<li>${h.city} — ${new Date(h.searched_at).toLocaleString('pt-BR')}</li>`)
+  list.innerHTML = historyData
+    .map(h => `<li onclick="showHistoryWeather(${h.id})">${h.city} — ${new Date(h.searched_at).toLocaleString('pt-BR')}</li>`)
     .join('');
 }
 
